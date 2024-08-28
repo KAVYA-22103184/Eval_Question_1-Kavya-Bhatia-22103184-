@@ -1,0 +1,74 @@
+students = {}
+
+def add_student(student_id, name, student_class):
+    
+    if student_id in students:
+        print(f"Student with ID {student_id} already exists.")
+    else:
+       
+        students[student_id] = {
+            'name': name,
+            'class': student_class,
+            'grades': []
+        }
+        print(f"Student {name} added successfully.")
+
+def update_grades(student_id, new_grades):
+  
+    if student_id not in students:
+        print(f"Student with ID {student_id} does not exist.")
+    else:
+      
+        students[student_id]['grades'].extend(new_grades)
+        print(f"Grades updated for student ID {student_id}.")
+
+def calculate_average(student_id):
+   
+    if student_id not in students:
+        print(f"Student with ID {student_id} does not exist.")
+        return None
+    
+    grades = students[student_id]['grades']
+    if not grades:
+        print(f"No grades available for student ID {student_id}.")
+        return None
+    
+    average = sum(grades) / len(grades)
+    return average
+
+def generate_top_students_report():
+    
+    class_top_students = {}
+    
+    for student_id, info in students.items():
+        student_class = info['class']
+        average = calculate_average(student_id)
+        
+        if average is None:
+            continue
+        
+        if student_class not in class_top_students or class_top_students[student_class]['average'] < average:
+            class_top_students[student_class] = {
+                'name': info['name'],
+                'average': average
+            }
+    
+  
+    print("Top-performing students in each class:")
+    for student_class, top_student in class_top_students.items():
+        print(f"Class {student_class}: {top_student['name']} with an average grade of {top_student['average']:.2f}")
+
+
+add_student(1, 'Kavya', 'COA')
+add_student(2, 'Surbhi', 'OS')
+add_student(3, 'Tanya', 'COA')
+add_student(4, 'Sush', 'OS')
+update_grades(1, [90, 85, 88])
+update_grades(2, [78, 82, 91])
+update_grades(3, [30, 85, 58])
+update_grades(4, [100, 95, 98])
+print(f"Kavya's average grade: {calculate_average(1):.2f}")
+print(f"Surbhi's average grade: {calculate_average(2):.2f}")
+print(f"Tanya's average grade: {calculate_average(3):.2f}")
+print(f"Sush's average grade: {calculate_average(4):.2f}")
+generate_top_students_report()
